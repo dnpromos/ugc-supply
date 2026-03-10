@@ -23,7 +23,7 @@ export default function Hero() {
 
         <div className="flex gap-[1rem] flex-wrap">
           <Link
-            href="#cta"
+            href="/studio"
             className="btn-clip inline-flex items-center gap-[0.5rem] py-[1.1rem] px-[3rem] bg-accent text-black font-bold text-[1.05rem] uppercase tracking-[0.05em] hover:shadow-[0_0_40px_rgba(200,255,0,0.3),0_0_80px_rgba(200,255,0,0.1)] hover:scale-[1.03] transition-all"
           >
             Generate First Video →

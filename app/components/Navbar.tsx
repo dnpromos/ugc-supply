@@ -11,7 +11,7 @@ export default function Navbar() {
         <Link href="#how" className="hover:text-accent transition-colors">Process</Link>
         <Link href="#pricing" className="hover:text-accent transition-colors">Pricing</Link>
         <Link
-          href="#cta"
+          href="/studio"
           className="btn-clip inline-flex items-center gap-[0.5rem] py-[0.75rem] px-[1.75rem] bg-accent text-black font-bold text-[0.9rem] uppercase tracking-[0.05em] hover:shadow-[0_0_40px_rgba(200,255,0,0.3),0_0_80px_rgba(200,255,0,0.1)] hover:scale-[1.03] transition-all"
         >
           Start Creating
