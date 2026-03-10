@@ -253,6 +253,6 @@ export function getActors(industry: string, scene: string): Actor[] {
 }
 
 export function getVideoPreview(actorValue: string): string {
-  const slug = actorValue.replace(/\+/g, "-").replace(/\s/g, "-");
+  const slug = actorValue.replace(/\+&\+/g, "-and-").replace(/\+/g, "-");
   return `https://cdn.wiro.ai/uploads/sampleinputs/${slug}.mp4`;
 }
