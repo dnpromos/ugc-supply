@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { industries, getScenes, getActors, Actor } from "@/lib/actors";
 
 interface ActorPickerProps {
@@ -14,11 +14,26 @@ function actorToSlug(value: string): string {
 
 function ActorCard({ actor, isSelected, onSelect }: { actor: Actor; isSelected: boolean; onSelect: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const slug = actorToSlug(actor.value);
   const videoUrl = `https://cdn.wiro.ai/uploads/sampleinputs/${slug}.mp4`;
 
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <button
+      ref={cardRef}
       onClick={onSelect}
       onMouseEnter={() => videoRef.current?.play()}
       onMouseLeave={() => {
@@ -27,21 +42,29 @@ function ActorCard({ actor, isSelected, onSelect }: { actor: Actor; isSelected: 
           videoRef.current.currentTime = 0;
         }
       }}
-      className={`relative aspect-[9/16] rounded-[4px] overflow-hidden border-2 transition-all cursor-pointer group bg-[var(--color-card)] ${
+      className={`relative aspect-[9/16] rounded-[4px] overflow-hidden border-2 transition-all cursor-pointer group bg-[rgba(255,255,255,0.03)] ${
         isSelected
           ? "border-accent shadow-[0_0_20px_rgba(200,255,0,0.3)]"
           : "border-transparent hover:border-[rgba(200,255,0,0.3)]"
       }`}
     >
-      <video
-        ref={videoRef}
-        src={videoUrl}
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {isVisible && (
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onLoadedData={() => setHasLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${hasLoaded ? "opacity-100" : "opacity-0"}`}
+        />
+      )}
+      {!hasLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[24px] h-[24px] border-2 border-[rgba(200,255,0,0.2)] border-t-accent rounded-full animate-spin" />
+        </div>
+      )}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-[0.5rem] pt-[2rem]">
         <span className="text-[0.65rem] text-white font-medium leading-tight block">
           {actor.label}
